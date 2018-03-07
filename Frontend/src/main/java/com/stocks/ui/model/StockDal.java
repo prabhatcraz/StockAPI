@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class StockDal {
     }
 
     public Stock getStock(final String id) throws IOException {
-        final String url = baseUrl + "api/stock/" + id;
+        final String url = baseUrl + "api/stocks/" + id;
 
         RestTemplate restTemplate = new RestTemplate();
         JSONObject result = restTemplate.getForObject(url, JSONObject.class);
@@ -36,18 +37,18 @@ public class StockDal {
         return Stock.fromJson(result);
     }
 
-    public List<Stock> getStocks(final int pageNumber) throws ParseException {
-        final String url = baseUrl + "api/stocks";
+    public Model getPageModel(final int pageNumber, Model model) throws ParseException {
+        final String url = baseUrl + "api/stocks?page=" + pageNumber;
 
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(url, String.class);
-
-        JSONArray obj = (JSONArray) new JSONParser().parse(result);
+        final RestTemplate restTemplate = new RestTemplate();
+        final String result = restTemplate.getForObject(url, String.class);
+        final JSONObject obj = (JSONObject) new JSONParser().parse(result);
         final List<Stock> stocks = new ArrayList<>();
 
-        for (int i = 0; i < obj.size(); i++) {
+        final JSONArray items = (JSONArray) obj.get("items");
+        for (int i = 0; i < items.size(); i++) {
 
-            JSONObject o = (JSONObject) obj.get(i);
+            JSONObject o = (JSONObject) items.get(i);
 
             final String id = (String) o.get("id");
             final Long instant = (Long) o.get("lastUpdateDate");
@@ -63,7 +64,9 @@ public class StockDal {
                     .name(name)
                     .build());
         }
-
-        return stocks;
+        model.addAttribute("stocks", stocks);
+        model.addAttribute("page", pageNumber);
+        model.addAttribute("maxPage", obj.get("maxPage"));
+        return model;
     }
 }

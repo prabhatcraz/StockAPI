@@ -23,10 +23,9 @@
 </nav>
 
 <div id="stockInfoTable">
-    <table  class="table table-hover">
+    <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Symbol</th>
             <th scope="col">Name</th>
             <th scope="col">Price</th>
@@ -36,21 +35,25 @@
         <tbody>
         <th:block th:each="stock,i : ${stocks}">
             <tr>
-                <th scope="row" th:text="${i.count}"></th>
                 <td th:text="${stock.symbol}"></td>
                 <td th:text="${stock.name}"></td>
                 <td th:text="${stock.price}">$</td>
                 <td th:text="${stock.lastUpdateDate}"></td>
             </tr>
         </th:block>
-        </tbody>
-    </table>
 
-    <div th:unless="${page &lt; 2}">
-        <a th:href="${'?page=' + {page-1}}" class="btn btn-primary">Prev</a>
+        </tbody>
+
+    </table>
+    <div>
+            <span class="floatLeft" th:unless="${page &lt; 2}">
+                <a th:href="${'?page=' + {page-1}}" class="btn btn-primary">Prev</a>
+            </span>
+        <span class="rightFloat" th:unless="${page == maxPage}">
+                <a th:href="${'?page=' + {page+1}}" class="btn btn-primary">Next</a>
+            </span>
     </div>
 
-    <a th:href="${'?page=' + {page+1}}" type="button" class="btn btn-primary">Next</a>
 </div>
 </body>
 </html>

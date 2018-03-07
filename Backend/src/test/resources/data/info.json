@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "name": "Apple Inc",
+    "symbol": "AAPL",
+    "currentPrice": 904.72
+  },
+  {
+    "id": "2",
+    "name": "Amazon.com Inc",
+    "symbol": "AMZN",
+    "currentPrice": 722.93
+  },
+  {
+    "id": "3",
+    "name": "Microsoft Corporation",
+    "symbol": "MSFT",
+    "currentPrice": 717.46
+  },
+  {
+    "id": "4",
+    "name": "Facebook Inc",
+    "symbol": "FB",
+    "currentPrice": 421.20
+  },
+  {
+    "id": "5",
+    "name": "JPMorgan Chase & Co",
+    "symbol": "JPM",
+    "currentPrice": 393.19
+  },
+  {
+    "id": "6",
+    "name": "Alphabet Inc ",
+    "symbol": "GOOG",
+    "currentPrice": 377.06
+  },
+  {
+    "id": "7",
+    "name": "Johnson & Johnson",
+    "symbol": "JNJ",
+    "currentPrice": 345.61
+  },
+  {
+    "id": "8",
+    "name": "Bank of America Corp.",
+    "symbol": "BAC",
+    "currentPrice": 324.01
+  },
+  {
+    "id": "9",
+    "name": "Exxon Mobil Corp",
+    "symbol": "XOM",
+    "currentPrice": 320.11
+  },
+  {
+    "id": "10",
+    "name": "Walmart Inc",
+    "symbol": "WMT",
+    "currentPrice": 262.97
+  },
+  {
+    "id": "11",
+    "name": "Cisco Systems Inc",
+    "symbol": "CSCO",
+    "currentPrice": 217.82
+  },
+  {
+    "id": "12",
+    "name": "Berkshire Hathaway Inc",
+    "symbol": "BRK.B",
+    "currentPrice": 269.17
+  }
+]

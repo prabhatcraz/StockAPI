@@ -24,10 +24,9 @@ public class HomeController {
     @RequestMapping("/")
     public String getHomePage(@RequestParam(name = "page", defaultValue = "1") final int pageNumber,
                               Model model) throws IOException, ParseException {
-        final List<Stock> stocks = stockDal.getStocks(pageNumber);
+        stockDal.getPageModel(pageNumber, model);
 
-        model.addAttribute("stocks", stocks);
-        model.addAttribute("page", pageNumber);
+        System.out.println(model.asMap().get("items"));
 
         return "index";
     }

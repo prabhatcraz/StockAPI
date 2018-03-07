@@ -17,7 +17,13 @@ import java.util.Map;
  * application start by {@link InMemoryStockDal}.
  */
 public class StockInfoLoader {
-    private static final String DEMO_DATA_FILE = "data/stocks.json";
+
+
+    private final String filePath;
+
+    public StockInfoLoader(final String filePath) {
+        this.filePath = filePath;
+    }
 
     /**
      * Reads from a file and creates a map of stock.
@@ -31,7 +37,7 @@ public class StockInfoLoader {
 
         final ClassLoader classLoader = getClass().getClassLoader();
         final JSONParser parser = new JSONParser();
-        final String file = classLoader.getResource(DEMO_DATA_FILE).getFile();
+        final String file = classLoader.getResource(filePath).getFile();
         final Object obj = parser.parse(new FileReader(file));
         final JSONArray jsonArray = (JSONArray) obj;
 

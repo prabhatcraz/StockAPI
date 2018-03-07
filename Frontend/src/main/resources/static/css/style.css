@@ -1,5 +1,13 @@
 #stockInfoTable {
-    width: 560px;
+    width: 800px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.leftFloat {
+    float:left;
+}
+
+.rightFloat {
+    float: right;
 }
