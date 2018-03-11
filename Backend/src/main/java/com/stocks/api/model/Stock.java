@@ -1,37 +1,26 @@
 package com.stocks.api.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.experimental.Wither;
 
 import java.util.Date;
 
 /**
  * A model to represent a Stock object.
  */
-@Builder
-@NoArgsConstructor
+@Wither
 @AllArgsConstructor
+@NoArgsConstructor
 public class Stock {
-    @Getter
-    @Setter
-    private String id;
+    @Getter private String id;
 
-    @Getter
-    @Setter
-    private String name;
+    @Getter private String name;
 
-    @Getter
-    @Setter
-    private String symbol;
+    @Getter private String symbol;
 
-    @Getter
-    @Setter
-    private Double price;
+    @Getter private Double price;
 
-    @Getter
-    @Setter
-    private Date lastUpdateDate;
+    @Getter private Date lastUpdateDate;
 }

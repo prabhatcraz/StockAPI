@@ -1,8 +1,6 @@
 package com.stocks.api.controller;
 
-import com.stocks.api.dal.InMemoryStockDal;
 import com.stocks.api.dal.StockDal;
-import com.stocks.api.dal.StockInfoLoader;
 import com.stocks.api.manipulator.StockManager;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +14,6 @@ import java.io.IOException;
  */
 @Configuration
 public class StocksAdminControllerConfig {
-
-
 
     @Bean
     @Autowired

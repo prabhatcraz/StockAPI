@@ -9,15 +9,14 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A helper class that can generate a list of {@link Stock}s which would be used during
  * application start by {@link InMemoryStockDal}.
  */
 public class StockInfoLoader {
-
 
     private final String filePath;
 
@@ -33,7 +32,7 @@ public class StockInfoLoader {
      * @throws ParseException
      */
     public Map<String, Stock> readFromFile() throws IOException, ParseException {
-        final Map<String, Stock> stocks = new LinkedHashMap<>();  // So that order is preserved.
+        final Map<String, Stock> stocks = new ConcurrentHashMap<>();  // So that order is preserved.
 
         final ClassLoader classLoader = getClass().getClassLoader();
         final JSONParser parser = new JSONParser();
@@ -48,12 +47,12 @@ public class StockInfoLoader {
             final Double price = (Double) json.get("currentPrice");
             final String name = (String) json.get("name");
 
-            stocks.put(id, Stock.builder()
-                    .id(id)
-                    .symbol(symbol)
-                    .name(name)
-                    .price(price)
-                    .lastUpdateDate(new Date()).build());
+            stocks.put(id, new Stock()
+                    .withId(id)
+                    .withSymbol(symbol)
+                    .withName(name)
+                    .withPrice(price)
+                    .withLastUpdateDate(new Date()));
         });
 
         return stocks;

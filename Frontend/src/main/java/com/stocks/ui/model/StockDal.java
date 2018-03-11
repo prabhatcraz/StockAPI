@@ -33,7 +33,6 @@ public class StockDal {
         RestTemplate restTemplate = new RestTemplate();
         JSONObject result = restTemplate.getForObject(url, JSONObject.class);
 
-        System.out.println(result.toJSONString());
         return Stock.fromJson(result);
     }
 

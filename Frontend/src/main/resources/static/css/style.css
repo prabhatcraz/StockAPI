@@ -11,3 +11,9 @@
 .rightFloat {
     float: right;
 }
+
+#navigationButtonWrapper {
+    width:200px;
+    margin-left: auto;
+    margin-right: auto;
+}

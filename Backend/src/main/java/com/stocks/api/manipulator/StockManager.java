@@ -1,7 +1,6 @@
 package com.stocks.api.manipulator;
 
 import com.google.common.base.Preconditions;
-import com.stocks.api.controller.StocksAdminController;
 import com.stocks.api.dal.StockDal;
 import com.stocks.api.exceptions.ResourceAlreadyExistsException;
 import com.stocks.api.exceptions.ResourceNotFoundException;
@@ -34,16 +33,15 @@ public class StockManager {
      * @return
      */
     public Stock update(final String id, final Stock input) {
-        final Stock stock = stockDal.getById(id);
+        Stock stock = stockDal.getById(id);
 
         final String message = String.format("No stock found with id %s", id);
         Optional.of(stock).orElseThrow(()-> new ResourceNotFoundException(message));
 
-        Optional.ofNullable(input.getName()).ifPresent(x -> stock.setName(input.getName()));
-        Optional.ofNullable(input.getPrice()).ifPresent(x -> stock.setPrice(input.getPrice()));
-        Optional.ofNullable(input.getSymbol()).ifPresent(x -> stock.setSymbol(input.getSymbol()));
-
-        stock.setLastUpdateDate(new Date());
+        stock = stock.withName(input.getName() == null ? stock.getName() : input.getName());
+        stock = stock.withSymbol(input.getSymbol() == null ? stock.getSymbol() : input.getSymbol());
+        stock = stock.withPrice(input.getPrice() == null ? stock.getPrice() : input.getPrice());
+        stock = stock.withLastUpdateDate(new Date());
 
         stockDal.putStock(stock);
         return stock;
@@ -76,11 +74,12 @@ public class StockManager {
         Preconditions.checkNotNull(stock.getPrice(), "Price of stock should not be null");
 
         // Id must be generated within the system even if its supplied by the client.
-        stock.setId(UUID.randomUUID().toString());
-        stock.setLastUpdateDate(new Date());
-        stockDal.putStock(stock);
-
-        return stock;
+        return new Stock(null, null, null, null, null)
+                .withId(UUID.randomUUID().toString())
+                .withName(stock.getName())
+                .withSymbol(stock.getSymbol())
+                .withPrice(stock.getPrice())
+                .withLastUpdateDate(new Date());
     }
 
 

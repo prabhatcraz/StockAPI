@@ -22,20 +22,24 @@ public class StocksAdminController {
 
     private static Logger logger = LoggerFactory.getLogger(StocksAdminController.class);
 
-    @Autowired
     private StockManager stockManager;
+
+    @Autowired
+    public StocksAdminController(final StockManager stockManager) {
+        this.stockManager = stockManager;
+    }
 
     @RequestMapping(value = "/api/stocks/{stockId}", method = RequestMethod.GET)
     public Stock get(@PathVariable final String stockId) {
         return stockManager.get(stockId);
     }
 
-    @RequestMapping(value = "/api/stocks/{stockId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/stocks/{stockId}", method = RequestMethod.PUT, headers="Accept=application/json")
     public Stock update(@PathVariable final String stockId, @RequestBody Stock stock) {
         return stockManager.update(stockId, stock);
     }
 
-    @RequestMapping(value = "/api/stocks", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/stocks", method = RequestMethod.POST, headers="Accept=application/json")
     public Stock create(@RequestBody Stock stock) {
         return stockManager.create(stock);
     }

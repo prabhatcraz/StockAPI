@@ -1,6 +1,5 @@
 package com.stocks.api.dal;
 
-import com.stocks.api.manipulator.StockManager;
 import com.stocks.api.model.Stock;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +26,6 @@ public class InMemoryStockDal implements StockDal {
     @Autowired
     public InMemoryStockDal(final StockInfoLoader stockInfoLoader, final int pageSize) throws IOException, ParseException {
         this.stocks = stockInfoLoader.readFromFile();
-
         this.pageSize = pageSize;
     }
 

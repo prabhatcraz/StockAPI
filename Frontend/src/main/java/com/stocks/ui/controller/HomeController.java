@@ -26,8 +26,6 @@ public class HomeController {
                               Model model) throws IOException, ParseException {
         stockDal.getPageModel(pageNumber, model);
 
-        System.out.println(model.asMap().get("items"));
-
         return "index";
     }
 }

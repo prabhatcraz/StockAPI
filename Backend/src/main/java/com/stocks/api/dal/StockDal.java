@@ -4,8 +4,6 @@ package com.stocks.api.dal;
 import com.stocks.api.model.Stock;
 import org.json.simple.JSONObject;
 
-import java.util.List;
-
 /**
  * An interface to store and retrieve stock data into Storage.
  */
