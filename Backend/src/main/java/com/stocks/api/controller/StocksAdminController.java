@@ -35,8 +35,8 @@ public class StocksAdminController {
     }
 
     @RequestMapping(value = "/api/stocks/{stockId}", method = RequestMethod.PUT, headers="Accept=application/json")
-    public void update(@PathVariable final String stockId, @RequestBody Double price) {
-        stockManager.updatePrice(stockId, price);
+    public void update(@PathVariable final String stockId, @RequestBody String price) {
+        stockManager.updatePrice(stockId, Double.valueOf(price));
     }
 
     @RequestMapping(value = "/api/stocks", method = RequestMethod.POST, headers="Accept=application/json")

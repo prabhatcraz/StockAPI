@@ -8,11 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -84,6 +82,6 @@ public class InMemoryStockDalTest {
         assertEquals(name, savedStock.getName());
         assertEquals(price, savedStock.getPrice());
         assertEquals(symbol, savedStock.getSymbol());
-        assertNotNull(stock.getLastUpdateDate());
+        assertNotNull(savedStock.getLastUpdateDate());
     }
 }

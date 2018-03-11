@@ -56,4 +56,5 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.apache.httpcomponents:httpclient:4.5.5'
 }
