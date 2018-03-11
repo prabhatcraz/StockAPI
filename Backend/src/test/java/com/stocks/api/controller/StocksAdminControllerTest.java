@@ -1,6 +1,5 @@
 package com.stocks.api.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stocks.api.exceptions.ResourceAlreadyExistsException;
 import com.stocks.api.manipulator.StockManager;
@@ -21,6 +20,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,8 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(StocksAdminController.class)
 public class StocksAdminControllerTest {
-
-//    @Autowired
     private MockMvc mockMvc;
 
     @MockBean
@@ -56,7 +55,9 @@ public class StocksAdminControllerTest {
 
     @Test
     public void testGetStock() throws Exception {
-        mockMvc.perform(get("/api/stocks/1")).andExpect(status().isOk());
+        mockMvc.perform(get("/api/stocks/1"))
+                .andExpect(status().isOk())
+        ;
     }
 
     @Test
@@ -66,24 +67,22 @@ public class StocksAdminControllerTest {
 
     @Test
     public void testPutStock() throws Exception {
-        final Stock stock = new Stock().withPrice(1.23);
-        when(stockManager.update(any(), any())).thenReturn(stock);
+        final Double price = 1.23;
 
-        final String requestBody = new ObjectMapper().writeValueAsString(stock);
+        final String requestBody = new ObjectMapper().writeValueAsString(price);
         mockMvc.perform(put("/api/stocks/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isOk())
-                .andExpect(content().string(requestBody))
         ;
 
-        verify(stockManager, times(1)).update(any(), any());
+        verify(stockManager, times(1)).updatePrice(anyString(), any(Double.class));
     }
 
     @Test
     public void testPostStock() throws Exception {
         final Stock stock = new Stock().withPrice(1.23);
-        when(stockManager.update(any(), any())).thenReturn(stock);
+        when(stockManager.create(any())).thenReturn(stock);
 
         final String requestBody = new ObjectMapper().writeValueAsString(stock);
         mockMvc.perform(post("/api/stocks")
@@ -97,16 +96,8 @@ public class StocksAdminControllerTest {
     }
 
     @Test
-    public void testPutStock404() throws Exception {
-        final Stock stock = new Stock().withPrice(1.23);
-        when(stockManager.update(any(), any())).thenReturn(stock);
+    public void test405() {
 
-        final String requestBody = new ObjectMapper().writeValueAsString(stock);
-        mockMvc.perform(put("/api/stock/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-                .andExpect(status().is(404))
-        ;
     }
 
     @Test
@@ -115,9 +106,9 @@ public class StocksAdminControllerTest {
 
         final String errorMessage = "Something is wrong";
 
-        given(stockManager.update(any(), any())).willThrow(new RuntimeException(errorMessage));
+        doThrow(new RuntimeException(errorMessage)).when(stockManager).updatePrice(any(), any());
 
-        final String requestBody = new ObjectMapper().writeValueAsString(stock);
+        final String requestBody = new ObjectMapper().writeValueAsString(new Double(1.3));
         mockMvc.perform(put("/api/stocks/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -131,7 +122,7 @@ public class StocksAdminControllerTest {
                     )
         ;
 
-        verify(stockManager, times(1)).update(any(), any());
+        verify(stockManager, times(1)).updatePrice(any(), any());
     }
 
     @Test

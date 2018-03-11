@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -60,6 +61,6 @@ public class InMemoryStockDal implements StockDal {
 
     @Override
     public void putStock(final Stock stock) {
-        stocks.put(stock.getId(), stock);
+        stocks.put(stock.getId(), stock.withLastUpdateDate(new Date()));
     }
 }

@@ -1,5 +1,171 @@
 package com.stocks.api.manipulator;
 
+import com.stocks.api.dal.StockDal;
+import com.stocks.api.exceptions.ResourceAlreadyExistsException;
+import com.stocks.api.model.Stock;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Date;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(SpringRunner.class)
 public class StockManagerTest {
-    
+    @MockBean
+    StockDal stockDal;
+
+    private StockManager stockManager;
+    @Captor ArgumentCaptor<Stock> stockArgCaptor;
+
+    @Before
+    public void setUp() {
+        stockManager = new StockManager(stockDal);
+    }
+
+    @Test
+    public void testCreate() {
+        final String id = UUID.randomUUID().toString();
+        final String name = "a stock name";
+        final Double price = 20.34;
+        final String symbol = "a symbol";
+        final Date lastUpdate = new Date();
+        final Stock stock = new Stock()
+                .withId(id)
+                .withName(name)
+                .withPrice(price)
+                .withSymbol(symbol)
+                .withLastUpdateDate(lastUpdate);
+
+        stockManager.create(stock);
+
+        verify(stockDal, times(1)).putStock(stockArgCaptor.capture());
+        final Stock createdStock = stockArgCaptor.getValue();
+
+        assertNotEquals(id, createdStock.getId());
+        assertFalse(lastUpdate == createdStock.getLastUpdateDate());
+
+        assertEquals(name, createdStock.getName());
+        assertEquals(price, createdStock.getPrice());
+        assertEquals(symbol, createdStock.getSymbol());
+    }
+
+    @Test(expected = ResourceAlreadyExistsException.class)
+    public void testCreateAlreadyPresent() {
+        final String id = UUID.randomUUID().toString();
+        final String name = "a stock name";
+        final Double price = 20.34;
+        final String symbol = "a symbol";
+        final Date lastUpdate = new Date();
+        final Stock stock = new Stock()
+                .withId(id)
+                .withName(name)
+                .withPrice(price)
+                .withSymbol(symbol)
+                .withLastUpdateDate(lastUpdate);
+
+        when(stockDal.getBySymbol(symbol)).thenReturn(new Stock().withId(id));
+
+        final Stock createdStock = stockManager.create(stock);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCreateNoName() {
+        final String id = UUID.randomUUID().toString();
+        final String name = null;
+        final Double price = 20.34;
+        final String symbol = "a symbol";
+        final Date lastUpdate = new Date();
+        final Stock stock = new Stock()
+                .withId(id)
+                .withPrice(price)
+                .withSymbol(symbol)
+                .withLastUpdateDate(lastUpdate);
+
+        Stock createdStock = stockManager.create(stock);
+        createdStock.equals(stock);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCreateNoSymbol() {
+        final String id = UUID.randomUUID().toString();
+        final String name = "a stock name";
+        final Double price = 20.34;
+        final String symbol = null;
+        final Date lastUpdate = new Date();
+        final Stock stock = new Stock()
+                .withId(id)
+                .withName(name)
+                .withPrice(price)
+                .withLastUpdateDate(lastUpdate);
+
+        Stock createdStock = stockManager.create(stock);
+        createdStock.equals(stock);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCreateNoPrice() {
+        final String id = UUID.randomUUID().toString();
+        final String name = "a stock name";
+
+        final String symbol = "a stock symbol";
+        final Date lastUpdate = new Date();
+        final Stock stock = new Stock()
+                .withId(id)
+                .withName(name)
+                .withSymbol(symbol)
+                .withLastUpdateDate(lastUpdate);
+
+        Stock createdStock = stockManager.create(stock);
+        createdStock.equals(stock);
+    }
+
+    @Test
+    public void testUpdate() {
+        final String id = UUID.randomUUID().toString();
+        final String name = "a stock name";
+        final Double price = 20.34;
+        final String symbol = "a symbol";
+        final Date lastUpdate = new Date();
+        final Stock stock = new Stock()
+                .withId(id)
+                .withName(name)
+                .withPrice(price)
+                .withSymbol(symbol)
+                .withLastUpdateDate(lastUpdate);
+
+        when(stockDal.getById(id)).thenReturn(stock);
+
+        final Double newPrice = 22.03;
+        stockManager.updatePrice(id, newPrice);
+
+        verify(stockDal, times(1)).putStock(stockArgCaptor.capture());
+        final Stock updatedStock = stockArgCaptor.getValue();
+
+        assertEquals(id, updatedStock.getId());
+
+        assertEquals(newPrice, updatedStock.getPrice());
+    }
+
+    @Test
+    public void testGet() {
+
+    }
+
+    @Test
+    public void testGetByPage() {
+
+    }
 }

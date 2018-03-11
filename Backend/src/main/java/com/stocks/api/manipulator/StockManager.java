@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Manages stocks.
+ * Manages operations related to stocks.
  */
 public class StockManager {
     private static Logger logger = LoggerFactory.getLogger(StockManager.class);
@@ -28,36 +28,6 @@ public class StockManager {
     }
 
     /**
-     * Updates the fields of a stock which are supplied in input.
-     * @param input
-     * @return
-     */
-    public Stock update(final String id, final Stock input) {
-        Stock stock = stockDal.getById(id);
-
-        final String message = String.format("No stock found with id %s", id);
-        Optional.of(stock).orElseThrow(()-> new ResourceNotFoundException(message));
-
-        stock = stock.withName(input.getName() == null ? stock.getName() : input.getName());
-        stock = stock.withSymbol(input.getSymbol() == null ? stock.getSymbol() : input.getSymbol());
-        stock = stock.withPrice(input.getPrice() == null ? stock.getPrice() : input.getPrice());
-        stock = stock.withLastUpdateDate(new Date());
-
-        stockDal.putStock(stock);
-        return stock;
-    }
-
-    public Stock get(final String id) {
-        final Stock stock = stockDal.getById(id);
-        final String message = String.format("No stock found with id %s", id);
-        return Optional.of(stock).orElseThrow(()-> new ResourceNotFoundException(message));
-    }
-
-    public JSONObject get(final int pageNumber) {
-        return stockDal.getStocks(pageNumber);
-    }
-
-    /**
      * Creates a stock if the symbol of the stock does not exist in our database.
      *
      * @param stock
@@ -65,7 +35,7 @@ public class StockManager {
      */
     public Stock create(final Stock stock) {
         if(isAlreadyPresent(stock.getSymbol())) {
-           final String message = String.format("Stock with symbol %s already exists", stock.getSymbol());
+            final String message = String.format("Stock with symbol %s already exists", stock.getSymbol());
             throw new ResourceAlreadyExistsException(message);
         }
 
@@ -73,15 +43,55 @@ public class StockManager {
         Preconditions.checkNotNull(stock.getName(), "Name of company should not be null");
         Preconditions.checkNotNull(stock.getPrice(), "Price of stock should not be null");
 
-        // Id must be generated within the system even if its supplied by the client.
-        return new Stock(null, null, null, null, null)
+        // Id is an internal property and should be generated within the system.
+        final Stock stockToCreate = stock
                 .withId(UUID.randomUUID().toString())
-                .withName(stock.getName())
-                .withSymbol(stock.getSymbol())
-                .withPrice(stock.getPrice())
                 .withLastUpdateDate(new Date());
+
+        stockDal.putStock(stockToCreate);
+        return stockToCreate;
     }
 
+    /**
+     * Gets a {@link Stock} by its id.
+     * @param id
+     * @return
+     */
+    public Stock get(final String id) {
+        final Stock stock = stockDal.getById(id);
+        final String message = String.format("No stock found with id %s", id);
+        return Optional
+                .of(stock)
+                .orElseThrow(()-> new ResourceNotFoundException(message));
+    }
+
+    /**
+     * Updates the price of a single {@link Stock}.
+     * @param id
+     * @param price
+     */
+    public void updatePrice(final String id, final Double price) {
+        final Stock stock = stockDal.getById(id);
+
+        final String message = String.format("No stock found with id %s", id);
+        Optional.of(stock).orElseThrow(()-> new ResourceNotFoundException(message));
+
+        stockDal.putStock(stock.withPrice(price));
+    }
+
+    /**
+     * Gets a {@link JSONObject} with information for the page.
+     * {
+     *      "page": 2,
+     *      "items": <<list of stocks>>,
+     *      "maxPage": 4
+     * }
+     * @param pageNumber
+     * @return
+     */
+    public JSONObject get(final int pageNumber) {
+        return stockDal.getStocks(pageNumber);
+    }
 
     private boolean isAlreadyPresent(final String symbol) {
         Stock s = stockDal.getBySymbol(symbol);
