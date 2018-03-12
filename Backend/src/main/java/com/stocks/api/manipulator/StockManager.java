@@ -29,11 +29,15 @@ public class StockManager {
 
     /**
      * Creates a stock if the symbol of the stock does not exist in our database.
+     * Making it synchronized so that no two concurrent requests end up creating two stocks of same
+     * symbol.
      *
+     * Please note, this would not work in a real distributed environment. For real distributed
+     * environemnt, this has to be enforced at DAL layer.
      * @param stock
      * @return Stock
      */
-    public Stock create(final Stock stock) {
+    public synchronized Stock create(final Stock stock) {
         if(isAlreadyPresent(stock.getSymbol())) {
             final String message = String.format("Stock with symbol %s already exists", stock.getSymbol());
             throw new ResourceAlreadyExistsException(message);
