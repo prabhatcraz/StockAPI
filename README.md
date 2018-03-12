@@ -1,26 +1,27 @@
 # Contents
 There are two modules in this project:
 * Backend  : To start a REST server
-* Frontend : To start a HTML application.
+* Frontend : To start an HTML application.
 
 ## Starting Servers
-cd to Module folders and run
-  
+There are two ways to start servers, after which one can find frontend at [http://localhost:8000/](http://localhost:8000/)
+and backend at port 8080.
 
-### Frontend
+### Executing jars
+Considering you are the root folder of this repository, there are two packaged jars which could be run
 
+```bash
+java -jar Frontend/libs/stock-api-1.0.0.jar
+java -jar Backend/libs/stocks-api-1.0.0.jar
 ```
-cd Frontend
-gradle bootRun
-``` 
 
-[http://localhost:8000](http://localhost:8000)
-
-
-### Backend
-Starts a rest server at port 8080 
-
+### Using gradle bootRun
+```bash
+  cd Frontend
+  gradle bootRun
 ```
+
+```bash
 cd Backend
 gradle bootRun
 ```

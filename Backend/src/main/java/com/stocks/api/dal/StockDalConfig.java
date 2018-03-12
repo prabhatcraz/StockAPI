@@ -12,7 +12,7 @@ import java.io.IOException;
 @Configuration
 public class StockDalConfig {
     private final int PAGE_SIZE = 5;
-    private static final String DEMO_DATA_FILE = "data/stocks.json";
+    private static final String DEMO_DATA_FILE = "/data/stocks.json";
 
     @Bean
     public StockDal getStockDal(final StockInfoLoader infoLoader) throws IOException, ParseException {

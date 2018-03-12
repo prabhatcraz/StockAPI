@@ -1,13 +1,15 @@
 package com.stocks.api.dal;
 
 import com.stocks.api.model.Stock;
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,10 +36,15 @@ public class StockInfoLoader {
     public Map<String, Stock> readFromFile() throws IOException, ParseException {
         final Map<String, Stock> stocks = new ConcurrentHashMap<>();  // So that order is preserved.
 
-        final ClassLoader classLoader = getClass().getClassLoader();
+        final InputStream inputStream = getClass().getResourceAsStream(filePath);
+        final StringWriter writer = new StringWriter();
+        IOUtils.copy(inputStream, writer, "utf-8");
+        final String fileContent = writer.toString();
+
+//        final ClassLoader classLoader = getClass().getClassLoader();
         final JSONParser parser = new JSONParser();
-        final String file = classLoader.getResource(filePath).getFile();
-        final Object obj = parser.parse(new FileReader(file));
+//        final String file = classLoader.getResource(filePath).getFile();
+        final Object obj = parser.parse(fileContent);
         final JSONArray jsonArray = (JSONArray) obj;
 
         jsonArray.forEach(o -> {
