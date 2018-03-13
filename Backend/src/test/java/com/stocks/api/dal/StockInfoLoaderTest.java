@@ -16,7 +16,7 @@ public class StockInfoLoaderTest {
 
     @Test
     public void testReadFromFile() throws IOException, ParseException {
-        final StockInfoLoader stockInfoLoader = new StockInfoLoader("data/info.json");
+        final StockInfoLoader stockInfoLoader = new StockInfoLoader("/data/info.json");
         Map<String, Stock> stockList =stockInfoLoader.readFromFile();
 
         assertEquals(12, stockList.keySet().size());

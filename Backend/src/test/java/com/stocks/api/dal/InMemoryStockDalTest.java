@@ -22,7 +22,7 @@ public class InMemoryStockDalTest {
 
     @Before
     public void setUp() throws IOException, ParseException {
-        final StockInfoLoader infoLoader = new StockInfoLoader("data/info.json");
+        final StockInfoLoader infoLoader = new StockInfoLoader("/data/info.json");
         stockDal = new InMemoryStockDal(infoLoader, 5);
     }
 

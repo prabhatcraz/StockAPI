@@ -41,9 +41,7 @@ public class StockInfoLoader {
         IOUtils.copy(inputStream, writer, "utf-8");
         final String fileContent = writer.toString();
 
-//        final ClassLoader classLoader = getClass().getClassLoader();
         final JSONParser parser = new JSONParser();
-//        final String file = classLoader.getResource(filePath).getFile();
         final Object obj = parser.parse(fileContent);
         final JSONArray jsonArray = (JSONArray) obj;
 
